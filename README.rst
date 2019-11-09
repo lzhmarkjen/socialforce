@@ -7,6 +7,11 @@ Social Force Model
 
 .. code-block::
 
+    fork from https://github.com/svenkreiss/socialforce
+    改写 by lzhmark
+
+.. code-block::
+
     Social force model for pedestrian dynamics
     Dirk Helbing and Péter Molnár
     Phys. Rev. E 51, 4282 – Published 1 May 1995

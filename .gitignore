@@ -4,6 +4,8 @@ venv*/
 .pytest_cache/
 __pycache__/
 dist/
+.idea/
+out/
 
 # editors
 .vscode/
