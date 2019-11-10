@@ -4,29 +4,31 @@ import pytest
 import socialforce
 import matplotlib.pyplot as plt
 
+repeat = 2  # 每组计算10次
+
 
 @pytest.mark.plot
 def test_gate():
     # 测试主入口
     # 选择测试一个还是批量测试
-    gates_test()
     # gate_test()
+    #gates_n()
+    #gates_width()
+    gates_velocity()
 
 
 def gate_test():
     # default is gate(30, 1.6)
-    gate(30, 1.6, False, True)
+    gate(30, 1.6, 0.5, False, True)
 
 
-def gates_test():
-    res = []
-    repeat = 2  # 每组计算10次
-
+def gates_n():
     # 人数与时间的关系
+    res = []
     for n in range(1, 11):
         avg = 0
         for t in range(repeat):
-            avg += gate(n * 5, 1.6, False, True)
+            avg += gate(n * 5, 1.6, 0.5, False, True)
         res.append([n * 5, np.log2(avg / repeat)])
     res = np.stack(res)
     x = res[:, 0]
@@ -35,32 +37,50 @@ def gates_test():
     plt.ylabel('log2(time)')
     plt.plot(x, y, '-o')
     plt.savefig("out/n.png")
-    """
+
+
+def gates_width():
     # 门宽与时间的关系
     res = []
     for d in [i / 10.0 for i in range(13, 30)]:
         avg = 0
         for t in range(repeat):
-            avg += gate(30, d, False, True)
+            avg += gate(30, d, 0.5, False, True)
         res.append([d, np.log2(avg / repeat)])
     res = np.stack(res)
     x = res[:, 0]
     y = res[:, 1]
-    plt.xlabel('n')
+    plt.xlabel('width')
     plt.ylabel('log2(time)')
     plt.plot(x, y, '-o')
     plt.savefig("out/width.png")
-    """
+
+
+def gates_velocity():
+    # 速度与时间的关系
+    res = []
+    for v in [i / 10.0 for i in range(3, 11)]:
+        avg = 0
+        for t in range(repeat):
+            avg += gate(30, 1.6, v, False, True)
+        res.append([v, np.log2(avg / repeat)])
+    res = np.stack(res)
+    x = res[:, 0]
+    y = res[:, 1]
+    plt.xlabel('v')
+    plt.ylabel('log2(time)')
+    plt.plot(x, y, '-o')
+    plt.savefig("out/velocity.png")
 
 
 # 穿过门
-def gate(n, door_width, printGif, printPng):
+def gate(n, door_width, velocity, printGif, printPng):
     door_x = 0.0  # 门的横坐标
     destination = [3.0, 0.0]  # 目的地坐标
     range_x = [-10, door_x]  # 初始状态人群位置的x范围
     range_y = [-6.0, 6.0]  # 初始状态人群位置的y范围
-    vel_x = 0.5  # x方向速度
-    vel_y = 0.5  # y方向速度
+    vel_x = velocity  # x方向速度
+    vel_y = velocity  # y方向速度
 
     x_pos = np.random.random((n, 1)) * np.array([range_x[0]])
     y_pos = ((np.random.random((n, 1)) - 0.5) * 2.0) * np.array(([range_y[1]]))
